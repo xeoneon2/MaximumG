@@ -249,19 +249,21 @@
 
         let touchStartX;
         alphabetCarousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].pageX;
-        });
+    touchStartX = e.touches[0].pageX;
+    // Важно: не вызываем preventDefault здесь, чтобы не мешать нажатию
+}, { passive: false });
 
-        alphabetCarousel.addEventListener('touchmove', (e) => {
-            if (!touchStartX) return;
-            const diff = touchStartX - e.touches[0].pageX;
-            alphabetCarousel.scrollLeft += diff;
-            touchStartX = e.touches[0].pageX;
-        });
+alphabetCarousel.addEventListener('touchmove', (e) => {
+    if (!touchStartX) return;
+    e.preventDefault(); // ← теперь работает!
+    const diff = touchStartX - e.touches[0].pageX;
+    alphabetCarousel.scrollLeft += diff;
+    touchStartX = e.touches[0].pageX;
+}, { passive: false });
 
-        alphabetCarousel.addEventListener('touchend', () => {
-            touchStartX = null;
-        });
+alphabetCarousel.addEventListener('touchend', () => {
+    touchStartX = null;
+}, { passive: false });
 
         // === РИСОВАНИЕ ===
         function startDrawing(x, y) {
